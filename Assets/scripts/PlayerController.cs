@@ -111,6 +111,12 @@ public class PlayerController : MonoBehaviour {
                 motor.CollectJumpForceFromPlayerController(_jumpForce);
             }
 
+            //Cycle Weapons Code
+            if (Input.GetButtonDown("Fire2"))
+            {
+                GetComponent<Equipment>().CycleEquipment();
+            }
+
             /*Sprint Code
             if (Input.GetButton("Fire1") && _zMov == 1) //if the player is clicking left stick and also is pushing forward on the left stick...
             {

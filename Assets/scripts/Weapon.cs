@@ -31,15 +31,13 @@ public class Gun
 
 
 
-    //public Gun() { } //default (fallback) constructor
-
-    public Gun(string nm, int clip, int ammo, int dmg, int head, float velocity)
-    {
-        name = nm;
-        maxClip = clip;
-        maxAmmo = ammo;
-        damage = dmg;
-        headshotDamage = head;
-        bulletVelocity = velocity;
-    }
+        public Gun(string nm, int clip, int ammo, int dmg, int head, float velocity)
+        {
+            name = nm;
+            maxClip = clip;
+            maxAmmo = ammo;
+            damage = dmg;
+            headshotDamage = head;
+            bulletVelocity = velocity;
+        }
 }
