@@ -5,52 +5,42 @@ using UnityEngine;
 [RequireComponent(typeof(PlayerMotor))]
 public class PlayerController : MonoBehaviour {
 
+    public int myPlayerNum; //ref to which player I am signed in as (1,2,3,4)
 
     public int speed = 5; //the speed at which the character moves around (left analog stick)
     public int sprintMultiplier = 2; //this is how we will multiply your forward movespeed when sprinting
 
     public float horizontalLookSensitivity = 5; //the speed at which the character looks around (right analog stick)
-
     public float verticalLookSensitivity = 5; //the speed at which the character looks up and down (right analog stick)
-
     public float _jumpForce = 300;
-
-
-
-
 
     private PlayerMotor motor; //we need a reference to the PlayerMotor script attached to the PlayerObject so that we can send data over to it
 
 
-
-
-
-
-	// Use this for initialization
-	void Start ()
+    // Use this for initialization
+    void Start ()
     {
-        motor = GetComponent<PlayerMotor>(); //tell unity to seek the playermotor script attached to this object and call it 'motor'
+        motor = GetComponent<PlayerMotor>(); //tell unity to seek the playermotor script attached to this object and call it 'motor'      
 	}
 	
 	// Update is called once per frame
 	void Update ()
     {
+        //----------BREAKDOWN OF STEPS TO MAKE PLAYER MOVE AROUND
 
-        //BREAKDOWN OF STEPS TO MAKE PLAYER MOVE AROUND
+            //1) Create a FLOAT which will store the INPUT of LEFT AND RIGHT on the LEFT ANALOG STICK (collect/store horizontal input)
+            //2) Create a VECTOR3 which multiplies the LEFT AND RIGHT INPUT on the LEFT ANALOG STICK by the PLAYER TRANSFORM'S RIGHT DIRECTION. (multiply input value by player's right/left direction/store it in a vector3)
 
-        //1) Create a FLOAT which will store the INPUT of LEFT AND RIGHT on the LEFT ANALOG STICK (collect/store horizontal input)
-        //2) Create a VECTOR3 which multiplies the LEFT AND RIGHT INPUT on the LEFT ANALOG STICK by the PLAYER TRANSFORM'S RIGHT DIRECTION. (multiply input value by player's transform/store it in a vector3)
+            //3) Create a FLOAT which will store the INPUT of FORWARD AND BACKWARD on the LEFT ANALOG STICK (collect/store forward + backwards input)
+            //4) Create a VECTOR3 which multiplies the FORWARD AND BACK INPUT on the LEFT ANALOG STICK by the PLAYER TRANSFORM'S FORWARD DIRECTION. (multiply input value by player's z-axis direction /store it in a vector3)
 
-        //3) Create a FLOAT which will store the INPUT of FORWARD AND BACKWARD on the LEFT ANALOG STICK (collect/store forward/back input)
-        //4) Create a VECTOR3 which multiplies the FORWARD AND BACK INPUT on the LEFT ANALOG STICK by the PLAYER TRANSFORM'S UP DIRECTION. (multiply input value by player's transform/store it in a vector3)
+            //5) Create a VECTOR3 which adds up the SUM of the LEFT/RIGHT and FORWARD/BACK VECTOR3's, and multiplies that sum by our desired SPEED. (add the forward/back and left/right vec3's together. multiply that sum by speed)
 
-        //5) Create a VECTOR3 which adds up the SUM of the LEFT/RIGHT and FORWARD/BACK VECTOR3's, and multiplies that sum by our desired SPEED. (add the forward/back and left/right vec3's together. multiply that sum by speed)
-
-        //6) Finally, add the current position of the player's RIGIDBODY to the MOVEMENT VECTOR3 we created. This will move the player. (Actually apply that movement vec3 to the player's current position.)
+            //6) Finally, add the current position of the player's RIGIDBODY to the MOVEMENT VECTOR3 we created. This will move the player. (Actually apply that movement vec3 to the player's current position.)
 
         // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        //COLLECT THE PLAYER'S INPUTS (when a player pushes something on his controller, we need to make sure that we store the result of that button/joystick press)
+        //----------COLLECT THE PLAYER'S INPUTS (when a player pushes something on his controller, we need to make sure that we store the result of that button/joystick press)
 
             // LEFT ANALOG STICK:
             //if the player pushes left or right on the left analog stick, store it in a float called _xMov. _xMov will be either -1 0 or 1
@@ -58,20 +48,7 @@ public class PlayerController : MonoBehaviour {
 
             //if the player pushes forwards or backwards on the left analog stick, store it in a float called _zMov. _zMov will be either -1 0 or 1
             float _zMov = Input.GetAxisRaw("LSVertical");
-
-                    /*SPRINT CODE
-            if (Input.GetButton("Fire1") && _zMov == 1) //if the player is clicking left stick and also is pushing forward on the left stick...
-            {
-                _velocity = (_strafe + _walk) * speed * sprintMultiplier; //THIS version of _velocity will include the sprint multiplier
-            } */
-
-            //Jump Code
-            if (Input.GetButtonDown("Fire1"))
-            {
-                motor.CollectJumpForceFromPlayerController(_jumpForce);
-            }
         
-
             //we now need to take that input data for the left stick and do something with it to make it affect the player object's forward/backward and horizontal movement (strafe/walk):       
     
             //make a vector 3 which will take the LEFT AND RIGHT directions of the PLAYER TRANSFORM and multiply it by _xMov
@@ -118,16 +95,27 @@ public class PlayerController : MonoBehaviour {
 
             //if the player pushes up or down on the right analog stick, store it in a float called _xRot. It will return either -1 0 or 1
             float _xRot = Input.GetAxisRaw("RSVertical");
+        
 
             //CREATE A VECTOR 3 TO STORE THE INPUT DATA FOR ROTATION    
             Vector3 _camRotation = new Vector3(_xRot, 0f, 0f) * verticalLookSensitivity; //the vector3 _camrotation will be multiplied by verticallookSensitivity, which changes how fast player will look up/down.
-
+            
             //we are calling the CollectCameraRotation function inside PlayerMotor and we are inputing the _rotation variable we calculated.
-            motor.CameraRotation(_camRotation); //send camera rotation over to the PlayerMotor Script
+            motor.CameraRotation(_camRotation); //send camera rotation over to the PlayerMotor Script. There, the rotation will actually be performed
 
 
 
+            //Jump Code
+            if (Input.GetButtonDown("Fire1"))
+            {
+                motor.CollectJumpForceFromPlayerController(_jumpForce);
+            }
 
+            /*Sprint Code
+            if (Input.GetButton("Fire1") && _zMov == 1) //if the player is clicking left stick and also is pushing forward on the left stick...
+            {
+            _velocity = (_strafe + _walk) * speed * sprintMultiplier; //THIS version of _velocity will include the sprint multiplier
+            } */
 
 
 
@@ -135,4 +123,4 @@ public class PlayerController : MonoBehaviour {
 
 
     }
-    }
+}

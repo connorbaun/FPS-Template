@@ -22,6 +22,8 @@ public class PlayerMotor : MonoBehaviour {
     [SerializeField]
     private float jumpForce;
 
+
+
     
 
 
@@ -81,8 +83,10 @@ public class PlayerMotor : MonoBehaviour {
         rb.MoveRotation(rb.rotation * Quaternion.Euler(rotation)); //take the player's current rigidbody rotation and multiply it by rotation
         if (cam != null)
         {
+           
             cam.transform.Rotate(camRotation); //rotate the camera to match camRotation.
-            Debug.Log("CamRotation Value = " + camRotation);
+            
+            //Debug.Log("CamRotation Value = " + camRotation);
         }
     }
 
