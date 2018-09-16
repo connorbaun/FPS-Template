@@ -31,7 +31,7 @@ public class Equipment : MonoBehaviour {
     void Update ()
     {
         ManageEquipment(); //every frame, makes sure that we are tracking which weapon is current and which is next
-        Debug.Log("Primary: " + currentGun.name + " || Secondary: " + nextGun.name);
+        //Debug.Log("Primary: " + currentGun.name + " || Secondary: " + nextGun.name);
     }
 
     public void CycleEquipment()
@@ -62,8 +62,9 @@ public class Equipment : MonoBehaviour {
 
     private void SetStartingEquipment()
     {
-        equipped[0] = pistol; //sets our equipped gun
-        equipped[1] = br;
-        currentGun = equipped[gunIndex];
+        equipped[0] = br; //sets our currentGun
+        equipped[1] = pistol; //sets our nextGun
+
+        currentGun = equipped[gunIndex]; //makes sure current gun starts as 0
     }
 }

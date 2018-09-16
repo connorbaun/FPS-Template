@@ -282,6 +282,9 @@ MonoBehaviour:
   rotation: {x: 0, y: 0, z: 0}
   camRotation: {x: 0, y: 0, z: 0}
   jumpForce: 0
+  doubleJumpForce: 0
+  grounded: 0
+  canDoubleJump: 0
 --- !u!114 &114578502611169218
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -306,11 +309,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   myPlayerNum: 3
-  speed: 6
+  speed: 5
   sprintMultiplier: 2
   horizontalLookSensitivity: 3
   verticalLookSensitivity: 2
-  _jumpForce: 200
+  _jumpForce: 500
+  _doubleJumpForce: 250
 --- !u!124 &124244835822581648
 Behaviour:
   m_ObjectHideFlags: 1

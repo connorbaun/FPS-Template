@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour {
     public float horizontalLookSensitivity = 5; //the speed at which the character looks around (right analog stick)
     public float verticalLookSensitivity = 5; //the speed at which the character looks up and down (right analog stick)
     public float _jumpForce = 300;
+    public float _doubleJumpForce = 200;
 
     private PlayerMotor motor; //we need a reference to the PlayerMotor script attached to the PlayerObject so that we can send data over to it
 
@@ -108,7 +109,7 @@ public class PlayerController : MonoBehaviour {
             //Jump Code
             if (Input.GetButtonDown("Fire1"))
             {
-                motor.CollectJumpForceFromPlayerController(_jumpForce);
+                motor.CollectJumpForceFromPlayerController(_jumpForce, _doubleJumpForce);
             }
 
             //Cycle Weapons Code
@@ -122,11 +123,6 @@ public class PlayerController : MonoBehaviour {
             {
             _velocity = (_strafe + _walk) * speed * sprintMultiplier; //THIS version of _velocity will include the sprint multiplier
             } */
-
-
-
-
-
 
     }
 }

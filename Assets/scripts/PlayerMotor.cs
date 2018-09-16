@@ -20,7 +20,16 @@ public class PlayerMotor : MonoBehaviour {
     private Vector3 camRotation = Vector3.zero; //so we are going to store the _rotation from PlayerContorller as 'rotation' in this script
 
     [SerializeField]
-    private float jumpForce;
+    private float jumpForce; //amount of energy for intial jump
+
+    [SerializeField]
+    private float doubleJumpForce; //amount of energy for a double jump
+
+    [SerializeField]
+    private bool grounded; //tells us whether we are touching the floor or not
+
+    [SerializeField]
+    private bool canDoubleJump; //tells us whether we can jump again while in the air
 
 
 
@@ -54,9 +63,11 @@ public class PlayerMotor : MonoBehaviour {
     {
         camRotation = _camRotation; //we are taking that _camRotation vector from PlayerController (see above) and we are calling it "rotation" so it does not have the same name as _camRotation.
     }
-    public void CollectJumpForceFromPlayerController(float _jumpForce)
+    public void CollectJumpForceFromPlayerController(float _jumpForce, float _doubleJumpForce)
     {
         jumpForce = _jumpForce;
+        doubleJumpForce = _doubleJumpForce;
+
         PerformJump();
     }
 
@@ -66,7 +77,7 @@ public class PlayerMotor : MonoBehaviour {
     {
         PerformMovement(); //calling PerformMovement in fixed because any physics calls should always be done in FixedUpdate
         PerformRotation(); //calling PerformRotation in FixedUpdate because any physics calls should always be done in FixedUpdate
-        
+        Debug.Log("Grounded = " + grounded);
 	}
 
     void PerformMovement()
@@ -92,7 +103,36 @@ public class PlayerMotor : MonoBehaviour {
 
     void PerformJump()
     {
-        rb.AddForce((transform.up * jumpForce));
+        if (grounded)
+        {
+            rb.AddForce((transform.up * jumpForce));
+        }
+
+        if (!grounded)
+        {
+            if (canDoubleJump == true)
+            {
+                rb.AddForce((transform.up * jumpForce));
+                canDoubleJump = false;
+            }
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.collider.tag == "ground")
+        {
+            grounded = true;
+            canDoubleJump = true;
+        }
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.collider.tag == "ground")
+        {
+            grounded = false;
+        }
     }
 
 
