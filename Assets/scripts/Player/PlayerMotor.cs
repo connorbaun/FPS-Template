@@ -134,18 +134,18 @@ public class PlayerMotor : MonoBehaviour {
             grounded = false;
         }
 
-        if (collision.collider.tag == "moving")
-        {
-            transform.parent = null;
-        }
+
+
     }
 
     private void OnCollisionStay(Collision collision)
     {
-        if (collision.collider.tag == "moving")
+        if (collision.collider.tag == "ground")
         {
-            transform.parent = collision.transform;
+            transform.parent = collision.gameObject.transform.parent; //become a child of collision's parent.
+
         }
+
     }
 
 
