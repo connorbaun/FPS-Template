@@ -6,6 +6,7 @@ TagManager:
   tags:
   - ground
   - moving
+  - pickup
   layers:
   - Default
   - TransparentFX

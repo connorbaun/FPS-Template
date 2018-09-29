@@ -15,7 +15,8 @@ public class PlayerShoot : MonoBehaviour
     private Gun[] myEquipped = new Gun[2];
 
     public Text ammoUI; // a ref to text onscreen that shows ammo amounts
-    public ParticleSystem muzzleFlash;
+    public Text interactUI; // a ref to popup when standing over weapon
+    public ParticleSystem muzzleFlash; //a ref to the muzzleflash of the weapon
 
     // Use this for initialization
     void Start()
@@ -90,6 +91,28 @@ public class PlayerShoot : MonoBehaviour
             myCurrentGun.currentAmmo = 0; //make my pocket ammo = 0
         }
         
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.GetComponent<Collider>().tag == "pickup")
+        {
+            Debug.Log(equip.theGuns[other.GetComponent<Pickup>().type].name);
+            interactUI.text = "Hold R1 to pickup " + equip.theGuns[other.GetComponent<Pickup>().type].name;
+        }
+        if (Input.GetButtonDown("Pickup"))
+        {
+            Debug.Log("We should have taken this gun");
+            equip.PickupGun(other.GetComponent<Pickup>().type);
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.GetComponent<Collider>().tag == "pickup")
+        {
+            interactUI.text = " ";
+        }
     }
 
 }

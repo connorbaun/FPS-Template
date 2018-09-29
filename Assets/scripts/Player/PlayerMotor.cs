@@ -130,6 +130,8 @@ public class PlayerMotor : MonoBehaviour {
             grounded = true;
             canDoubleJump = true;
         }
+
+        
     }
 
     private void OnCollisionExit(Collision collision)
@@ -146,9 +148,11 @@ public class PlayerMotor : MonoBehaviour {
         if (collision.collider.tag == "ground")
         {
             transform.parent = collision.gameObject.transform.parent; //become a child of collision's parent.
-
         }
+
     }
+
+
 
 
 }

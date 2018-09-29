@@ -105,7 +105,7 @@ public class PlayerController : MonoBehaviour {
             float _xRot = Input.GetAxisRaw("RSVertical") * verticalLookSensitivity;
             UDrotation += _xRot; //stores the "change" in Up/Down rotation of camera since last frame
             UDrotation = Mathf.Clamp(UDrotation, -70, 70); //makes sure that we can't look all the way up or down
-        Debug.Log(UDrotation);
+            //Debug.Log(UDrotation);
 
             motor.CollectRotationFromPlayerController(LRrotation,UDrotation); //we are calling the CollectRotation function inside PlayerMotor and we are inputing the _rotation variable we calculated.
 

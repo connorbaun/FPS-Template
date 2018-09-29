@@ -9,7 +9,7 @@ public class Equipment : MonoBehaviour {
 
     public Gun pistol = new Gun("Magnum", 8, 60, 8, 60, 20, 50, 30000); //new weapon
     public Gun smg = new Gun("M7 Carbine",  60, 300, 60, 240, 8, 8, 20000); //new weapon
-    public Gun br = new Gun("BHR55 Battle Rifle",   36, 200, 36, 360, 4, 7, 30000); //new weapon
+    public Gun br = new Gun("BHR55 Battle Rifle",   36, 10, 36, 360, 4, 7, 30000); //new weapon
     public Gun empty = new Gun("Empty", 0, 0, 0, 0, 0, 0, 0);
 
     public Gun currentGun; //the gun that is onscreen right this instant
@@ -51,6 +51,24 @@ public class Equipment : MonoBehaviour {
             }
         }
         
+    }
+
+    public void PickupGun(int value)
+    {
+        if (gunIndex == 0)
+        {
+            if (theGuns[value].name != currentGun.name && theGuns[value].name != nextGun.name)
+            {
+                equipped[0] = theGuns[value];
+            }
+        }
+        else if(gunIndex == 1)
+        {
+            if (theGuns[value].name != currentGun.name && theGuns[value].name != nextGun.name)
+            {
+                equipped[1] = theGuns[value];
+            }
+        }
     }
 
     private void ManageEquipment()
