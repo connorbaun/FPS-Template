@@ -140,6 +140,10 @@ public class PlayerController : MonoBehaviour {
                 shoot.Reload();
             }
 
+
+
+
+
             /*Sprint Code
             if (Input.GetButton("Fire1") && _zMov == 1) //if the player is clicking left stick and also is pushing forward on the left stick...
             {

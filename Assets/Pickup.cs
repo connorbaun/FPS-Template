@@ -5,17 +5,21 @@ using UnityEngine;
 public class Pickup : MonoBehaviour {
     public int clipAmmo;
     public int pocketAmmo;
-    public int type = 0;
+    public string gunName = null;
+    [SerializeField]
+    public Gun gunType;
+    //public Equipment allEquip;
 
-	// Use this for initialization
-	void Start ()
+    // Use this for initialization
+    void Start ()
     {
-        type = 2; //battlerifle corresponds to type 2
+
+
 	}
 	
-	// Update is called once per frame
-	void Update ()
+
+    public void RemoveFromMap()
     {
-		
-	}
+        Destroy(gameObject);
+    }
 }

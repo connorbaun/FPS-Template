@@ -16,6 +16,7 @@ public class PlayerShoot : MonoBehaviour
 
     public Text ammoUI; // a ref to text onscreen that shows ammo amounts
     public Text interactUI; // a ref to popup when standing over weapon
+    public Text currWeapUI;
     public ParticleSystem muzzleFlash; //a ref to the muzzleflash of the weapon
 
     // Use this for initialization
@@ -49,6 +50,10 @@ public class PlayerShoot : MonoBehaviour
         {
             ammoUI.text = " ( " + myCurrentGun.currentClip.ToString() + " | " + myCurrentGun.currentAmmo.ToString() + " ) ";
         }
+
+
+
+        currWeapUI.text = "Current: " + myCurrentGun.name + " / " +  myNextGun.name;
         
 
         //Debug.Log("we have out " + myCurrentGun.name + " and " + myNextGun.name + " secondary");
@@ -97,13 +102,15 @@ public class PlayerShoot : MonoBehaviour
     {
         if (other.GetComponent<Collider>().tag == "pickup")
         {
-            Debug.Log(equip.theGuns[other.GetComponent<Pickup>().type].name);
-            interactUI.text = "Hold R1 to pickup " + equip.theGuns[other.GetComponent<Pickup>().type].name;
+            //Debug.Log(other.GetComponent<Pickup>().gunType.name);
+            interactUI.text = "Hold R1 to pickup " + other.GetComponent<Pickup>().gunType.name + "bullets: " + other.GetComponent<Pickup>().clipAmmo + " " + other.GetComponent<Pickup>().pocketAmmo;
         }
         if (Input.GetButtonDown("Pickup"))
         {
             Debug.Log("We should have taken this gun");
-            equip.PickupGun(other.GetComponent<Pickup>().type);
+            equip.PickupGun(other.GetComponent<Pickup>().gunType, other.GetComponent<Pickup>().clipAmmo, other.GetComponent<Pickup>().pocketAmmo);
+            other.GetComponent<Pickup>().RemoveFromMap();
+            interactUI.text = "";
         }
     }
 

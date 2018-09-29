@@ -10,13 +10,15 @@ public class Equipment : MonoBehaviour {
     public Gun pistol = new Gun("Magnum", 8, 60, 8, 60, 20, 50, 30000); //new weapon
     public Gun smg = new Gun("M7 Carbine",  60, 300, 60, 240, 8, 8, 20000); //new weapon
     public Gun br = new Gun("BHR55 Battle Rifle",   36, 10, 36, 360, 4, 7, 30000); //new weapon
-    public Gun empty = new Gun("Empty", 0, 0, 0, 0, 0, 0, 0);
+    public Gun empty = new Gun("------", 0, 0, 0, 0, 0, 0, 0);
 
     public Gun currentGun; //the gun that is onscreen right this instant
     public Gun nextGun; //the gun that we will cycle to if the cycle button is pressed
 
     public Gun[] equipped = new Gun[2]; //equipment refers to the guns we have equipped
     public int gunIndex = 0; //keeps track of which gun we are currently on; 0 or 1?
+    public Pickup pickupPrefab; //ref to the primitive pickup item which will be dropped out of our face upon picking up a new weapon
+    public GameObject pickupSpawner;
 
 
     // Use this for initialization
@@ -25,6 +27,7 @@ public class Equipment : MonoBehaviour {
         theGuns.Add(pistol); //adds the newly-created gun to the list of all guns in the game
         theGuns.Add(smg); //adds the newly-created gun to the list of all guns in the game
         theGuns.Add(br); //adds the newly-created gun to the list of all guns in the game
+        theGuns.Add(empty);
 
         SetStartingEquipment(); //allows us to set starting equipment (which weapons will we spawn with?)
         
@@ -34,13 +37,24 @@ public class Equipment : MonoBehaviour {
     void Update ()
     {
         ManageEquipment(); //every frame, makes sure that we are tracking which weapon is current and which is next
-        //Debug.Log("Primary: " + currentGun.name + " || Secondary: " + nextGun.name);
+                           //Debug.Log("Primary: " + currentGun.name + " || Secondary: " + nextGun.name);
+        if (Input.GetButtonDown("Jump"))
+        {
+            DropBR();
+        }
+
+        if (Input.GetButtonDown("Throw"))
+        {
+            ThrowCurrentWeapon();
+        }
+
+        Debug.Log(currentGun.name);
+        //currentGun = equipped[gunIndex];
     }
 
     public void CycleEquipment()
     {
-        if (nextGun != empty)
-        {
+        
             if (gunIndex == 0)
             {
                 gunIndex = 1;
@@ -49,26 +63,104 @@ public class Equipment : MonoBehaviour {
             {
                 gunIndex = 0;
             }
-        }
+        
         
     }
 
-    public void PickupGun(int value)
+    public void PickupGun(Gun type, int clip, int ammo)
+    {        
+            if (currentGun == equipped[0])
+            {
+                if (equipped[0].currentClip > 0 || equipped[0].currentAmmo > 0)
+                {
+                    CloneWeapon(0);
+                }
+
+                equipped[0] = type;
+                equipped[0].currentClip = clip;
+                equipped[0].currentAmmo = ammo;
+                
+            }
+            else if (currentGun == equipped[1])
+            {
+                if (equipped[1].currentClip > 0 && equipped[1].currentAmmo > 0)
+                {
+                    CloneWeapon(0);
+                }
+
+
+                equipped[1] = type;
+                equipped[1].currentClip = type.currentClip;
+                equipped[1].currentAmmo = type.currentAmmo;
+            }
+        
+
+        
+    }
+
+    public void CloneWeapon(float force)
+    {
+        if (currentGun == equipped[0])
+        {
+            if (equipped[0] != empty)
+            {
+                Pickup oldGun = Instantiate(pickupPrefab);
+                oldGun.transform.position = pickupSpawner.transform.position;
+                oldGun.GetComponent<Pickup>().gunType = equipped[0];
+                oldGun.GetComponent<Pickup>().clipAmmo = equipped[0].currentClip;
+                oldGun.GetComponent<Pickup>().pocketAmmo = equipped[0].currentAmmo;
+                oldGun.GetComponent<Pickup>().gunName = equipped[0].name;
+                oldGun.GetComponent<Rigidbody>().AddForce(pickupSpawner.transform.forward * force);
+            }
+
+        }
+        else if (currentGun == equipped[1])
+        {
+            if (equipped[1] != empty)
+            {
+                Pickup oldGun = Instantiate(pickupPrefab);
+                oldGun.transform.position = pickupSpawner.transform.position;
+                oldGun.GetComponent<Pickup>().gunType = equipped[1];
+                oldGun.GetComponent<Pickup>().clipAmmo = equipped[1].currentClip;
+                oldGun.GetComponent<Pickup>().pocketAmmo = equipped[1].currentAmmo;
+                oldGun.GetComponent<Pickup>().gunName = equipped[1].name;
+                oldGun.GetComponent<Rigidbody>().AddForce(pickupSpawner.transform.forward * force);
+
+            }
+
+        }
+
+    }
+
+    public void ThrowCurrentWeapon()
     {
         if (gunIndex == 0)
         {
-            if (theGuns[value].name != currentGun.name && theGuns[value].name != nextGun.name)
+            if (equipped[0] != empty)
             {
-                equipped[0] = theGuns[value];
+                CloneWeapon(10000);
+                equipped[0] = empty;
             }
-        }
-        else if(gunIndex == 1)
+            
+        } else if (gunIndex == 1)
         {
-            if (theGuns[value].name != currentGun.name && theGuns[value].name != nextGun.name)
+            if (equipped[1] != empty)
             {
-                equipped[1] = theGuns[value];
+                CloneWeapon(10000);
+                equipped[1] = empty;
             }
         }
+
+    }
+
+    public void DropBR()
+    {
+        Pickup oldGun = Instantiate(pickupPrefab);
+        oldGun.transform.position = pickupSpawner.transform.position;
+        oldGun.GetComponent<Pickup>().gunType = br;
+        oldGun.GetComponent<Pickup>().clipAmmo = br.maxClip;
+        oldGun.GetComponent<Pickup>().pocketAmmo = br.maxAmmo;
+
     }
 
     private void ManageEquipment()
