@@ -31,6 +31,12 @@ public class PlayerMotor : MonoBehaviour {
     [SerializeField]
     private bool canDoubleJump; //tells us whether we can jump again while in the air
 
+    [SerializeField]
+    private float yRotate; //we will store the current amount of rotation of the camera in this variable
+
+    [SerializeField]
+    private float xRotate; // we will store the current amount of left/right rotation of the player obj in this variable
+
 
 
     
@@ -54,9 +60,10 @@ public class PlayerMotor : MonoBehaviour {
 
 
 
-    public void CollectRotationFromPlayerController(Vector3 _rotation)
+    public void CollectRotationFromPlayerController(float xValue, float yValue)
     {
-        rotation = _rotation; //we are taking that _rotation vector from PlayerController (see above) and we are calling it "rotation" so it does not have the same name as _rotation.
+        xRotate = xValue;
+        yRotate = yValue; 
     }
 
     public void CameraRotation(Vector3 _camRotation)
@@ -77,7 +84,7 @@ public class PlayerMotor : MonoBehaviour {
     {
         PerformMovement(); //calling PerformMovement in fixed because any physics calls should always be done in FixedUpdate
         PerformRotation(); //calling PerformRotation in FixedUpdate because any physics calls should always be done in FixedUpdate
-        Debug.Log("Grounded = " + grounded);
+        //Debug.Log("Grounded = " + grounded);
 	}
 
     void PerformMovement()
@@ -91,13 +98,11 @@ public class PlayerMotor : MonoBehaviour {
 
     void PerformRotation()
     {
-        rb.MoveRotation(rb.rotation * Quaternion.Euler(rotation)); //take the player's current rigidbody rotation and multiply it by rotation
-        if (cam != null)
+        transform.localRotation = Quaternion.Euler(0f, xRotate, 0f);
+
+        if (cam != null) //if we have got a camera on our object
         {
-           
-            cam.transform.Rotate(camRotation); //rotate the camera to match camRotation.
-            
-            //Debug.Log("CamRotation Value = " + camRotation);
+            cam.transform.localRotation = Quaternion.Euler(yRotate, 0f, 0f);
         }
     }
 
@@ -132,10 +137,8 @@ public class PlayerMotor : MonoBehaviour {
         if (collision.collider.tag == "ground")
         {
             grounded = false;
+            transform.parent = null;
         }
-
-
-
     }
 
     private void OnCollisionStay(Collision collision)
@@ -145,7 +148,6 @@ public class PlayerMotor : MonoBehaviour {
             transform.parent = collision.gameObject.transform.parent; //become a child of collision's parent.
 
         }
-
     }
 
 
